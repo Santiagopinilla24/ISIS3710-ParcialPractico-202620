@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:8080";
+const API_URL = " http://157.253.204.75:8080";
 
 // Así viene cada plan en la lista que manda el back
 export type PlanSummary = {
@@ -69,4 +69,33 @@ export async function likePlan(planId: string, userId: string) {
     const data = await response.json();
     throw new Error(data.message || "No se pudo dar me gusta");
   }
+}
+
+
+export type PlanInfo = {
+  name: string;
+  description: string;
+  estimatedPrice: number;
+  estimatedTime: number;
+  recomendations?: string;
+  address: string;
+  image?: string;
+  userId: string;
+};
+
+// Crea un nuevo plan en el backend
+export async function createPlan(input: PlanInfo): Promise<Plan> {
+  const response = await fetch(`${API_URL}/plans`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(input),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || "No se pudo crear la cuenta");
+  }
+
+  return response.json();
 }
